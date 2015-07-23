@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MapsMarkerTest</string>
+    <string name="setMarker">Set Marker</string>
+    <string name="title_activity_maps">Map2</string>
+</resources>
