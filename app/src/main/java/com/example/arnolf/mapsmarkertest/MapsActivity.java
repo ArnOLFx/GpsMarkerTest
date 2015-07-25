@@ -12,21 +12,20 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Spinner;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.Date;
-
-public class MapsActivity extends FragmentActivity implements LocationListener, GoogleMap.OnMarkerClickListener {
+public class MapsActivity extends FragmentActivity implements LocationListener,
+        GoogleMap.OnMarkerClickListener, AdapterView.OnItemSelectedListener {
 
     /**
      * 11.899038399999995 57.6589749
@@ -43,26 +42,39 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
     private GoogleMap mMap;
     double lat, lon;
 
-    TextView tv, tv2;
+    //TextView tv, tv2;
+    Spinner spinner;
+    ArrayAdapter<CharSequence> sAdapter;
     Button button;
 
     Marker marker;
     Markers markers;
+    ControllantDrawer drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        tv = (TextView) findViewById(R.id.textView);
-        tv2 = (TextView) findViewById(R.id.textView2);
+        //tv = (TextView) findViewById(R.id.textView);
+        //tv2 = (TextView) findViewById(R.id.textView2);
         button = (Button) findViewById(R.id.setMarker);
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+        sAdapter = ArrayAdapter.createFromResource(this,
+                R.array.spinner_array, android.R.layout.simple_spinner_item);
+
+        sAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(sAdapter);
 
         initMap();
     }
 
     public void onClick(View v) {
 
+        drawer.addMarker(mMap);
+/*
         Date d = new Date();
 
         if (!Double.isNaN(lat) && !Double.isNaN(lon)) {
@@ -86,6 +98,7 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 12.0f);
             mMap.animateCamera(update);
         }
+*/
     }
 
     @Override
@@ -100,7 +113,11 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
-            // Check if we were successful in obtaining the map.
+            mMap.setMyLocationEnabled(true);
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            /*mMap.setOnMarkerClickListener(this);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(57.713685, 11.99295), 10.0f));
+            */// Check if we were successful in obtaining the map.
             if (mMap != null) {
                 initMap();
             }
@@ -123,6 +140,7 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
 
         LatLng POS = new LatLng(57.713685, 11.99295);
 
+        //Init'ed here for testing...
         lat = POS.latitude;
         lon = POS.longitude;
 
@@ -138,6 +156,7 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
 */
         if (mMap != null) {
             markers = new Markers(mMap, this);
+            drawer = new ControllantDrawer(mMap);
             Log.d("MAP", "MAP != NULL");
         } else {
             Log.d("MAP", "MAP == NULL");
@@ -149,10 +168,10 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
     public void onLocationChanged(Location location) {
 
         if (location == null) {
-            tv.setText("No location available!");
+            //tv.setText("No location available!");
         } else {
                 Log.d("LOCATION", "Location Not Null");
-            if (Double.isNaN(mMap.getMyLocation().getLongitude())
+            if (Double.isNaN(mMap.getMyLocation().getLatitude())
                     && Double.isNaN(mMap.getMyLocation().getLongitude())) {
                 Log.d("MyLocation", "MyLocation Is Null");
                 lat = location.getLatitude();
@@ -208,5 +227,15 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
 
         Log.d("MARKER-CLICK", "MARKER" + marker);
         return false;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Log.d("Menu", parent.getItemAtPosition(position).toString());
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

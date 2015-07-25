@@ -66,7 +66,7 @@ public class Markers implements Runnable {
                 markerHashMap.remove(id);
                 timeStamps.remove(id);
             } else {
-                ma.tv2.setText("No marker to be deleted");
+                //ma.tv2.setText("No marker to be deleted");
             }
 
         }
