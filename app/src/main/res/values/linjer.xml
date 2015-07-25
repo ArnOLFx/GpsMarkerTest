@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinner_array">
+        <item>1:an Tynnered</item>
+        <item>1:an Östra</item>
+        <item>2:an Högsbo</item>
+        <item>2:an Mölndal</item>
+        <item>3:an Markland</item>
+        <item>3:an Kålltorp</item>
+        <item>4:an Mölndal</item>
+        <item>4:an Angered</item>
+    </string-array>
+</resources>
